@@ -1,19 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Patternizer
 {
@@ -25,9 +12,14 @@ namespace Patternizer
         public MainWindow()
         {
             InitializeComponent();
-            Bitmap map = RegionFill.CreateNonIndexedImage(Bitmap.FromFile("Bitmap1.bmp"));
-            RegionFill.FillRegionList(map, 50, 50);
 
+            Image img = Bitmap.FromFile("images.jpg");
+            using (Bitmap bmp = new Bitmap(img))
+            {
+                RegionFill.FillRegionList(bmp, 50, 50);
+                bmp.Save("SDFK.bmp");
+
+            }
         }
 
         private void Window_DragEnter(object sender, DragEventArgs e)

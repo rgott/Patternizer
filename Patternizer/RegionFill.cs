@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Patternizer
 {
     public abstract class RegionFill
     {
+        private object Lock = new object();
+
         public static Bitmap CreateNonIndexedImage(Image src)
         {
             Bitmap newBmp = new Bitmap(src.Width, src.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -26,6 +29,10 @@ namespace Patternizer
                     return _ImgRect = new Rectangle(0, 0, Img.Width, Img.Height);
                 }
                 return _ImgRect;
+            }
+            set
+            {
+                _ImgRect = value;
             }
         }
 
@@ -62,13 +69,13 @@ namespace Patternizer
             this.Img = Img;
         }
 
-        public static void FillRegionList(Bitmap Img,int FillWidth,int FillHeight)
+        public static void FillRegionList(Bitmap Img, int FillWidth, int FillHeight)
         {
             //new RightPointTriangle(Img, 380, 176, FillWidth, FillHeight).FillRegion();
             int count = 0;
             for (int currentX = 0; currentX < Img.Width; currentX += FillWidth)
             {
-                for (int currentY = (count % 2 == 0) ? 0 : FillHeight/2; currentY < Img.Height; currentY += FillHeight)
+                for (int currentY = (count % 2 == 0) ? 0 : -FillHeight / 2; currentY < ((count % 2 == 0) ? Img.Height : FillHeight + Img.Height); currentY += FillHeight)
                 {
                     new LeftPointTriangle(Img, currentX, currentY, FillWidth, FillHeight).FillRegion();
                     new RightPointTriangle(Img, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).FillRegion();
@@ -76,7 +83,6 @@ namespace Patternizer
                 }
                 count++;
             }
-            Img.Save("SDFK.bmp");
         }
 
         public void FillRegion()
