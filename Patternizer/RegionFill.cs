@@ -69,35 +69,38 @@ namespace Patternizer
             this.Img = Img;
         }
 
-        public static void FillRegionList(Bitmap Img, int FillWidth, int FillHeight)
+        public static SVG FillRegionList(Bitmap Img, int FillWidth, int FillHeight)
         {
+            SVG svg = new SVG(new Rectangle(0, 0, Img.Width, Img.Height));
             //new RightPointTriangle(Img, 380, 176, FillWidth, FillHeight).FillRegion();
             int count = 0;
             for (int currentX = 0; currentX < Img.Width; currentX += FillWidth)
             {
                 for (int currentY = (count % 2 == 0) ? 0 : -FillHeight / 2; currentY < ((count % 2 == 0) ? Img.Height : FillHeight + Img.Height); currentY += FillHeight)
                 {
-                    new LeftPointTriangle(Img, currentX, currentY, FillWidth, FillHeight).FillRegion();
-                    new RightPointTriangle(Img, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).FillRegion();
+                    svg.addPoint(new LeftPointTriangle(Img, currentX, currentY, FillWidth, FillHeight).FillRegion(),new Point[]
+                    {
+                        new Point(currentX + FillWidth, currentY),
+                        new Point(currentX, currentY + (FillHeight / 2)),
+                        new Point(currentX, currentY - (FillHeight / 2))
+                    });
+
+                    svg.addPoint(new RightPointTriangle(Img, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).FillRegion() ,new Point[]
+                    {
+                        new Point(currentX, currentY + (FillHeight / 2)),
+                        new Point(currentX + FillWidth, currentY + FillHeight),
+                        new Point(currentX + FillWidth, currentY)
+                    });
+
+                    
                     //new Square(Img, currentX, currentY, FillWidth, FillHeight).FillRegion();
                 }
                 count++;
             }
+            return svg;
         }
 
-        public void FillRegion()
-        {
-            foreach (RowRangeData item in Fill)
-            {
-                for (int i = item.From; i < item.To; i++)
-                {
-                    Img.SetPixel(i, item.row, AvgColor);
-                }
-            }
-            //Img.Save("SDFK.bmp");// Debugging
-        }
-
-
+        public abstract Color FillRegion();
         //int start;
         //int stop;
         //int width;
@@ -152,7 +155,6 @@ namespace Patternizer
                 B /= Count;
                 return Color.FromArgb((int)A, (int)R, (int)G, (int)B);                
             }
-
         }
     }
 }

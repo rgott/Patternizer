@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Patternizer
+﻿namespace Patternizer
 {
     class SpecialFraction
     {
@@ -14,6 +8,12 @@ namespace Patternizer
         // TODO: make 2/3 != 1/1
         public SpecialFraction(int numerator,int denominator)
         {
+            if (numerator == 0)
+                numerator = 1;
+            if (denominator == 0)
+                denominator = 1;
+
+
             int wholeValue = numerator / denominator;
             if(wholeValue == 0)
             {
@@ -26,12 +26,6 @@ namespace Patternizer
                 numerator = wholeValue;
                 denominator = 1;
             }
-
-
-            if (numerator == 0)
-                numerator = 1;
-            if (denominator == 0)
-                denominator = 1;
 
             Numerator = numerator;
             Denominator = denominator;

@@ -12,6 +12,7 @@ namespace Patternizer
     {
         public RightPointTriangle(Bitmap Img, int StartX, int StartY, int Width, int Height) : base(Img, StartX, StartY, Width, Height)
         {
+            
         }
 
         protected override List<RowRangeData> getIndexArray(int StartX, int StartY, int Width, int Height)
@@ -33,11 +34,36 @@ namespace Patternizer
             }
             return list;
         }
+
+        public override Color FillRegion()
+        {
+            foreach (RowRangeData item in Fill)
+            {
+                for (int i = item.From; i < item.To; i++)
+                {
+                    Img.SetPixel(i, item.row, AvgColor);
+                }
+            }
+            return AvgColor;
+        }
     }
     public class LeftPointTriangle : RegionFill
     {
+        public override Color FillRegion()
+        {
+            foreach (RowRangeData item in Fill)
+            {
+                for (int i = item.From; i < item.To; i++)
+                {
+                    Img.SetPixel(i, item.row, AvgColor);
+                }
+            }
+            return AvgColor;
+            //Img.Save("SDFK.bmp");// Debugging
+        }
         public LeftPointTriangle(Bitmap Img, int StartX, int StartY, int Width, int Height) : base(Img, StartX, StartY, Width, Height)
         {
+            
         }
 
         protected override List<RowRangeData> getIndexArray(int StartX, int StartY, int Width, int Height)
@@ -59,5 +85,6 @@ namespace Patternizer
             }
             return list;
         }
+
     }
 }

@@ -14,6 +14,19 @@ namespace Patternizer
         {
         }
 
+        public override Color FillRegion()
+        {
+            foreach (RowRangeData item in Fill)
+            {
+                for (int i = item.From; i < item.To; i++)
+                {
+                    Img.SetPixel(i, item.row, AvgColor);
+                }
+            }
+            return AvgColor;
+            //Img.Save("SDFK.bmp");// Debugging
+        }
+
         protected override List<RowRangeData> getIndexArray(int StartX, int StartY, int Width, int Height)
         {
             var list = new List<RowRangeData>();

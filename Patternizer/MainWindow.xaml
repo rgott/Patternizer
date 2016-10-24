@@ -13,7 +13,7 @@
     <Grid>
         <TextBlock Name="textBlock" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drag an image here."/>
         <Image Name="img" Margin="0,33,0,0"/>
-        <Slider x:Name="slider" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="497" ValueChanged="slider_ValueChanged"/>
+        <Slider x:Name="slider" HorizontalAlignment="Left" Minimum="1" Maximum="50" Margin="10,10,0,0" VerticalAlignment="Top" Width="497" ValueChanged="slider_ValueChanged"/>
 
     </Grid>
 </Window>
