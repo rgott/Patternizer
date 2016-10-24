@@ -116,13 +116,12 @@ namespace Patternizer
         }
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Bitmap map = RegionFill.CreateNonIndexedImage(Bitmap.FromFile("Bitmap1.bmp"));
             long start = Environment.TickCount;
-            RegionFill.FillRegionList(map, (int)e.NewValue+1, (int)e.NewValue+1);
+            //RegionFill.FillRegionList(map, (int)e.NewValue+1, (int)e.NewValue+1);
 
             long end = Environment.TickCount;
             Console.WriteLine(end-start);
-            map.Save("SDFK.bmp");
+            //map.Save("SDFK.bmp");
 
 
             BitmapImage bitmap = new BitmapImage();

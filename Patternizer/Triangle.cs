@@ -1,90 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Patternizer
 {
     public class RightPointTriangle : RegionFill
     {
-        public RightPointTriangle(Bitmap Img, int StartX, int StartY, int Width, int Height) : base(Img, StartX, StartY, Width, Height)
+        public RightPointTriangle(Rectangle ImgRect, int StartX, int StartY, int Width, int Height) 
+            : base(ImgRect, StartX, StartY, Width, Height)
         {
             
         }
 
-        protected override List<RowRangeData> getIndexArray(int StartX, int StartY, int Width, int Height)
+        protected override List<RowRangeData> getIndexArray(Rectangle ImgRect, int StartX, int StartY, int Width, int Height)
         {
             var list = new List<RowRangeData>();
+            var frac = new SpecialFraction(Height / 2, Width);
 
-            SpecialFraction frac = new SpecialFraction(Height / 2, Width);
-
-            Range r = new Range(StartX, StartX + Width);
-            list.Add(new RowRangeData(StartY, r, ImgRect));// middle
+            var range = new Range(StartX, StartX + Width);
+            list.Add(new RowRangeData(StartY, range, ImgRect));// middle
 
             for (int i = 1; i <= Width; i++)
             {
-                r = new Range(StartX, StartX + Width - (frac.Denominator * i));
+                range = new Range(StartX, StartX + Width - (frac.Denominator * i));
                 // pos slope
-                list.Add(new RowRangeData(StartY - (frac.Numerator * i), r, ImgRect));
+                list.Add(new RowRangeData(StartY - (frac.Numerator * i), range, ImgRect));
                 // neg slope
-                list.Add(new RowRangeData(StartY + (frac.Numerator * i), r, ImgRect));
+                list.Add(new RowRangeData(StartY + (frac.Numerator * i), range, ImgRect));
             }
             return list;
-        }
-
-        public override Color FillRegion()
-        {
-            foreach (RowRangeData item in Fill)
-            {
-                for (int i = item.From; i < item.To; i++)
-                {
-                    Img.SetPixel(i, item.row, AvgColor);
-                }
-            }
-            return AvgColor;
         }
     }
     public class LeftPointTriangle : RegionFill
     {
-        public override Color FillRegion()
+
+        public LeftPointTriangle(Rectangle ImgRect, int StartX, int StartY, int Width, int Height) : base(ImgRect, StartX, StartY, Width, Height)
         {
-            foreach (RowRangeData item in Fill)
-            {
-                for (int i = item.From; i < item.To; i++)
-                {
-                    Img.SetPixel(i, item.row, AvgColor);
-                }
-            }
-            return AvgColor;
-            //Img.Save("SDFK.bmp");// Debugging
-        }
-        public LeftPointTriangle(Bitmap Img, int StartX, int StartY, int Width, int Height) : base(Img, StartX, StartY, Width, Height)
-        {
-            
         }
 
-        protected override List<RowRangeData> getIndexArray(int StartX, int StartY, int Width, int Height)
+        protected override List<RowRangeData> getIndexArray(Rectangle ImgRect,int StartX, int StartY, int Width, int Height)
         {
             var list = new List<RowRangeData>();
-            
-            SpecialFraction frac = new SpecialFraction(Height / 2, Width);
-            
-            Range r = new Range(StartX, StartX + Width);
-            list.Add(new RowRangeData(StartY, r,ImgRect));// middle
+            var frac = new SpecialFraction(Height / 2, Width);
+
+            var range = new Range(StartX, StartX + Width);
+            list.Add(new RowRangeData(StartY, range,ImgRect));// middle
 
             for (int i = 1; i <= Width; i++)
             {
-                r = new Range(((frac.Denominator * i) + StartX), StartX + Width);
+                range = new Range(((frac.Denominator * i) + StartX), StartX + Width);
                 // pos slope
-                list.Add(new RowRangeData(StartY - (frac.Numerator * i), r, ImgRect));
+                list.Add(new RowRangeData(StartY - (frac.Numerator * i), range, ImgRect));
                 // neg slope
-                list.Add(new RowRangeData(StartY + (frac.Numerator * i), r, ImgRect));
+                list.Add(new RowRangeData(StartY + (frac.Numerator * i), range, ImgRect));
             }
             return list;
         }
-
     }
 }
