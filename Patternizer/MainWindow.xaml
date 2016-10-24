@@ -3,17 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        
         xmlns:local="clr-namespace:Patternizer"
         mc:Ignorable="d"
         AllowDrop="True"
         DragEnter="Window_DragEnter"
         Drop="Window_Drop"
         DragLeave="Window_DragLeave"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="1511.862">
     <Grid>
         <TextBlock Name="textBlock" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drag an image here."/>
-        <Image Name="img" Margin="0,33,0,0"/>
-        <Slider x:Name="slider" HorizontalAlignment="Left" Minimum="1" Maximum="50" Margin="10,10,0,0" VerticalAlignment="Top" Width="497" ValueChanged="slider_ValueChanged"/>
 
+        <Image Name="img" Margin="0,33,0,0"/>
+        <Slider x:Name="slider" HorizontalAlignment="Left" Minimum="1" Maximum="50" Margin="10,10,0,0" VerticalAlignment="Top" Width="497"/>
+        <Slider x:Name="slider2" HorizontalAlignment="Left" Minimum="1" Maximum="50" Margin="534,10,0,0" VerticalAlignment="Top" Width="497"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="1148,10,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
     </Grid>
 </Window>

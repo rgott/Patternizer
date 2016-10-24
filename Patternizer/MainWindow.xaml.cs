@@ -14,18 +14,22 @@ namespace Patternizer
     /// </summary>
     public partial class MainWindow : Window
     {
+        Image loadedImg = Bitmap.FromFile("bitmap2.jpg"); // load once
         public MainWindow()
         {
             InitializeComponent();
 
-            Image img = Bitmap.FromFile("images.jpg");
-            using (Bitmap bmp = new Bitmap(img))
+            long start = Environment.TickCount;
+
+            using (Bitmap bmp = new Bitmap(loadedImg))
             {
                 SVG svg = RegionFill.FillRegionList(bmp, 50, 50);
                 //bmp.Save("SDFK.bmp");
                 svg.endInit();
-                File.WriteAllText("SDF.svg",svg.s());
+                File.WriteAllText("SDF.html","<html>" + svg.s() + "</html>");
             }
+            long end = Environment.TickCount;
+            Console.WriteLine(end - start);
         }
 
         private void Window_DragEnter(object sender, DragEventArgs e)
@@ -52,83 +56,31 @@ namespace Patternizer
         }
 
 
-        // TODO: rewrite to make faster
-        private void ProcessUsingLockbits(Bitmap processedBitmap)
-        {
-            BitmapData bitmapData = processedBitmap.LockBits(new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height), ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
-
-            int bytesPerPixel = Bitmap.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
-            int byteCount = bitmapData.Stride * processedBitmap.Height;
-            byte[] pixels = new byte[byteCount];
-            IntPtr ptrFirstPixel = bitmapData.Scan0;
-            Marshal.Copy(ptrFirstPixel, pixels, 0, pixels.Length);
-            int heightInPixels = bitmapData.Height;
-            int widthInBytes = bitmapData.Width * bytesPerPixel;
-
-            for (int y = 0; y < heightInPixels; y++)
-            {
-                int currentLine = y * bitmapData.Stride;
-                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
-                {
-                    int oldBlue = pixels[currentLine + x];
-                    int oldGreen = pixels[currentLine + x + 1];
-                    int oldRed = pixels[currentLine + x + 2];
-
-                    // calculate new pixel value
-                    pixels[currentLine + x] = (byte)oldBlue;
-                    pixels[currentLine + x + 1] = (byte)oldGreen;
-                    pixels[currentLine + x + 2] = (byte)oldRed;
-                }
-            }
-
-            // copy modified bytes back
-            Marshal.Copy(pixels, 0, ptrFirstPixel, pixels.Length);
-            processedBitmap.UnlockBits(bitmapData);
-        }
-
-        private void ProcessUsingLockbitsAndUnsafeAndParallel(Bitmap processedBitmap)
-        {
-            unsafe
-            {
-                BitmapData bitmapData = processedBitmap.LockBits(new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height), ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
-
-                int bytesPerPixel = System.Drawing.Bitmap.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
-                int heightInPixels = bitmapData.Height;
-                int widthInBytes = bitmapData.Width * bytesPerPixel;
-                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
-
-                Parallel.For(0, heightInPixels, y =>
-                {
-                    byte* currentLine = PtrFirstPixel + (y * bitmapData.Stride);
-                    for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
-                    {
-                        int oldBlue = currentLine[x];
-                        int oldGreen = currentLine[x + 1];
-                        int oldRed = currentLine[x + 2];
-
-                        currentLine[x] = (byte)oldBlue;
-                        currentLine[x + 1] = (byte)oldGreen;
-                        currentLine[x + 2] = (byte)oldRed;
-                    }
-                });
-                processedBitmap.UnlockBits(bitmapData);
-            }
-        }
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            long start = Environment.TickCount;
-            //RegionFill.FillRegionList(map, (int)e.NewValue+1, (int)e.NewValue+1);
+        }
 
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            long start = Environment.TickCount;
+
+            using (Bitmap bmp = new Bitmap(loadedImg))
+            {
+                SVG svg = RegionFill.FillRegionList(bmp, (int)slider2.Value + 1, (int)slider2.Value + 1);
+                bmp.Save("SDFK.bmp");
+                svg.endInit();
+                File.WriteAllText("SDF.html", "<html>" + svg.s() + "</html>");
+            }
             long end = Environment.TickCount;
-            Console.WriteLine(end-start);
-            //map.Save("SDFK.bmp");
+            Console.WriteLine(end - start);
+
 
 
             BitmapImage bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-            bitmap.UriSource = new Uri("SDFK.bmp",UriKind.Relative);
+            bitmap.UriSource = new Uri("SDFK.bmp", UriKind.Relative);
             bitmap.EndInit();
             img.Source = bitmap;
         }
