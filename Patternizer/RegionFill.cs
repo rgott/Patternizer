@@ -63,8 +63,8 @@ namespace Patternizer
         protected abstract List<RowRangeData> getIndexArray(Rectangle ImgRect,int StartX, int StartY, int Width, int Height);
 
         protected Color getAverageColor(Bitmap Image)
-        {
-            ColorAvg cavg = new ColorAvg();
+        { 
+            ColorAvg cavg = new ColorAvg(); 
             foreach (RowRangeData range in Fill)
             {
                 for (int i = range.From; i < range.To; i++)

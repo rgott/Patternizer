@@ -28,7 +28,7 @@ namespace Patternizer
                 list.Add(new RowRangeData(StartY + (frac.Numerator * i), range, ImgRect));
             }
             return list;
-        }
+        } 
     }
     public class LeftPointTriangle : RegionFill
     {
