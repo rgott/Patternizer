@@ -27,7 +27,7 @@ namespace Patternizer
             this.Height = Height;
             this.ImgRect = ImgRect;
         }
-
+       
         public static SVG FillRegionList(Bitmap Img, int FillWidth, int FillHeight)
         {
             Rectangle ImgRect = new Rectangle(0, 0, Img.Width, Img.Height); // generate for all objects
@@ -35,20 +35,20 @@ namespace Patternizer
             int count = 0;
             for (int currentX = 0; currentX < Img.Width; currentX += FillWidth)
             {
-                for (int currentY = (count % 2 == 0) ? 0 : -FillHeight / 2; currentY < ((count % 2 == 0) ? Img.Height : FillHeight + Img.Height); currentY += FillHeight)
+                for (int currentY = (count % 2 == 0) ? 0 : -FillHeight / 2; currentY < FillHeight + Img.Height; currentY += FillHeight)
                 {
-                    svg.addPoint(new LeftPointTriangle(ImgRect, currentX, currentY, FillWidth, FillHeight).getAverageColor(Img),new Point[]
+                    svg.addPoint(new LeftPointTriangle(ImgRect, currentX, currentY, FillWidth, FillHeight).getAverageColor(Img),new System.Windows.Point[]
                     {
-                        new Point(currentX + FillWidth, currentY),
-                        new Point(currentX, currentY + (FillHeight / 2)),
-                        new Point(currentX, currentY - (FillHeight / 2))
+                        new System.Windows.Point(currentX + FillWidth, currentY),
+                        new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
+                        new System.Windows.Point(currentX, currentY - (FillHeight / 2.0))
                     });
 
-                    svg.addPoint(new RightPointTriangle(ImgRect, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).getAverageColor(Img) ,new Point[]
+                    svg.addPoint(new RightPointTriangle(ImgRect, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).getAverageColor(Img) ,new System.Windows.Point[]
                     {
-                        new Point(currentX, currentY + (FillHeight / 2)),
-                        new Point(currentX + FillWidth, currentY + FillHeight),
-                        new Point(currentX + FillWidth, currentY)
+                        new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
+                        new System.Windows.Point(currentX + FillWidth, currentY + FillHeight),
+                        new System.Windows.Point(currentX + FillWidth, currentY)
                     });
 
                     

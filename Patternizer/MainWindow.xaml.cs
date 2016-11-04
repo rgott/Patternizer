@@ -14,7 +14,7 @@ namespace Patternizer
     /// </summary>
     public partial class MainWindow : Window
     {
-        Image loadedImg = Bitmap.FromFile("bitmap2.jpg"); // load once
+        Image loadedImg = Bitmap.FromFile("Bitmap2.jpg"); // load once
         public MainWindow()
         {
             InitializeComponent();
@@ -23,7 +23,7 @@ namespace Patternizer
 
             using (Bitmap bmp = new Bitmap(loadedImg))
             {
-                SVG svg = RegionFill.FillRegionList(bmp, 50, 50);
+                SVG svg = RegionFill.FillRegionList(bmp, 21, 50);
                 //bmp.Save("SDFK.bmp");
                 svg.endInit();
                 File.WriteAllText("SDF.html","<html>" + svg.s() + "</html>");

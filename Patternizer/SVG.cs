@@ -35,7 +35,7 @@ namespace Patternizer
             builder.Append("</svg>");
         }
 
-        public void addPoint(Color color,params Point[] points)
+        public void addPoint(Color color,params System.Windows.Point[] points)
         {
             // initiate polygon
             builder.Append("<polygon points=\"");
