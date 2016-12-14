@@ -27,7 +27,23 @@ namespace Patternizer
             this.Height = Height;
             this.ImgRect = ImgRect;
         }
-       
+        public static void FillRegionList(Bitmap Img, int FillSize,params Color[] colors)
+        {
+            Rectangle ImgRect = new Rectangle(0, 0, Img.Width, Img.Height); // generate for all objects
+            int count = 0;
+            int colorCount = 0;
+            for (int currentX = 0; currentX < Img.Width; currentX += FillSize)
+            {
+                for (int currentY = (count % 2 == 0) ? 0 : -FillSize / 2; currentY < FillSize + Img.Height; currentY += FillSize)
+                {
+                    new LeftPointTriangle(ImgRect, currentX, currentY, FillSize, FillSize).setAverageColorUnsafe(Img,colors[colorCount++]);
+                    new RightPointTriangle(ImgRect, currentX, currentY + FillSize / 2, FillSize, FillSize).setAverageColorUnsafe(Img,colors[colorCount++]);
+
+                    //new Square(Img, currentX, currentY, FillWidth, FillHeight).FillRegion();
+                }
+                count++;
+            }
+        }
         public static SVG FillRegionList(Bitmap Img, int FillWidth, int FillHeight)
         {
             Rectangle ImgRect = new Rectangle(0, 0, Img.Width, Img.Height); // generate for all objects
@@ -37,14 +53,14 @@ namespace Patternizer
             {
                 for (int currentY = (count % 2 == 0) ? 0 : -FillHeight / 2; currentY < FillHeight + Img.Height; currentY += FillHeight)
                 {
-                    svg.addPoint(new LeftPointTriangle(ImgRect, currentX, currentY, FillWidth, FillHeight).getAverageColor(Img),new System.Windows.Point[]
+                    svg.addPoint(new LeftPointTriangle(ImgRect, currentX, currentY, FillWidth, FillHeight).getandSetAverageColor(Img),new System.Windows.Point[]
                     {
                         new System.Windows.Point(currentX + FillWidth, currentY),
                         new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
                         new System.Windows.Point(currentX, currentY - (FillHeight / 2.0))
                     });
 
-                    svg.addPoint(new RightPointTriangle(ImgRect, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).getAverageColor(Img) ,new System.Windows.Point[]
+                    svg.addPoint(new RightPointTriangle(ImgRect, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).getandSetAverageColor(Img) ,new System.Windows.Point[]
                     {
                         new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
                         new System.Windows.Point(currentX + FillWidth, currentY + FillHeight),
@@ -64,7 +80,7 @@ namespace Patternizer
         /// <returns>Should not return any negative numbers</returns>
         protected abstract List<RowRangeData> getIndexArray(Rectangle ImgRect,int StartX, int StartY, int Width, int Height);
 
-        private Color getAverageColor(Bitmap Img)
+        private Color getandSetAverageColor(Bitmap Img)
         {
             //return getAverageColorUnsafe(Img);
             return setAndgetAverageColorUnsafe(Img);
@@ -101,8 +117,6 @@ namespace Patternizer
                         //currentLine[x + 2] = (byte)oldRed;
                      }
                 }
-
-
 
                 processedBitmap.UnlockBits(bitmapData);
 
@@ -165,6 +179,37 @@ namespace Patternizer
                 processedBitmap.UnlockBits(bitmapData);
 
                 return Color.FromArgb(r,g,b);
+            }
+        }
+
+        private void setAverageColorUnsafe(Bitmap processedBitmap,Color color)
+        {
+            unsafe
+            {
+                BitmapData bitmapData = processedBitmap.LockBits(new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height), ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
+
+                int bytesPerPixel = System.Drawing.Bitmap.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
+                int heightInPixels = bitmapData.Height;
+                int widthInBytes;
+                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
+
+                long R = 0;
+                long G = 0;
+                long B = 0;
+
+                // set the color for the region
+                for (int i = 0; i < Fill.Count; i++)
+                {
+                    byte* currentLine = PtrFirstPixel + (Fill[i].row * bitmapData.Stride);
+                    widthInBytes = (Fill[i].To) * bytesPerPixel;
+                    for (int x = (Fill[i].From) * bytesPerPixel; x < widthInBytes; x += bytesPerPixel)
+                    {
+                        currentLine[x    ] = color.B;
+                        currentLine[x + 1] = color.G;
+                        currentLine[x + 2] = color.R;
+                    }
+                }
+                processedBitmap.UnlockBits(bitmapData);
             }
         }
         //protected Color getAverageColor(Bitmap Image)

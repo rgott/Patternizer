@@ -14,19 +14,18 @@ namespace Patternizer
     /// </summary>
     public partial class MainWindow : Window
     {
-        Image loadedImg = Bitmap.FromFile("Bitmap2.jpg"); // load once
+        Image loadedImg = Bitmap.FromFile("bmp3.jpg"); // load once
         public MainWindow()
         {
             InitializeComponent();
 
             long start = Environment.TickCount;
-
             using (Bitmap bmp = new Bitmap(loadedImg))
             {
-                SVG svg = RegionFill.FillRegionList(bmp, 21, 50);
+                //SVG svg = RegionFill.FillRegionList(bmp, 21, 50);
                 //bmp.Save("SDFK.bmp");
-                svg.endInit();
-                File.WriteAllText("SDF.html","<html>" + svg.s() + "</html>");
+                //svg.endInit();
+                //File.WriteAllText("SDF.html","<html>" + svg.s() + "</html>");
             }
             long end = Environment.TickCount;
             Console.WriteLine(end - start);
@@ -35,9 +34,7 @@ namespace Patternizer
         private void Window_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
                 e.Effects = DragDropEffects.Copy;
-            }
         }
 
         private void Window_Drop(object sender, DragEventArgs e)
@@ -59,14 +56,179 @@ namespace Patternizer
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
         }
-
+        Color[] colors = new Color[]
+        {
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+            Color.Red,
+        };
         private void button_Click(object sender, RoutedEventArgs e)
         {
             long start = Environment.TickCount;
 
+            File.Delete("SDFK.bmp");
+
             using (Bitmap bmp = new Bitmap(loadedImg))
             {
                 SVG svg = RegionFill.FillRegionList(bmp, (int)slider2.Value + 1, (int)slider2.Value + 1);
+                RegionFill.FillRegionList(bmp, 30, colors);
                 bmp.Save("SDFK.bmp");
                 svg.endInit();
                 File.WriteAllText("SDF.html", "<html>" + svg.s() + "</html>");
