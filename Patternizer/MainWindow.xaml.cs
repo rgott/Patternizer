@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace Patternizer
@@ -14,22 +13,17 @@ namespace Patternizer
     /// </summary>
     public partial class MainWindow : Window
     {
-        Image loadedImg = Bitmap.FromFile("bmp3.jpg"); // load once
+        string tempImgFile = Path.GetTempFileName();
+
+        public System.Drawing.Image LoadedImg { get; set; }
+        public string OutputFile { get; set; }
         public MainWindow()
         {
+            OutputFile = "hello.ext";
+            LoadedImg = null;
             InitializeComponent();
-
-            long start = Environment.TickCount;
-            using (Bitmap bmp = new Bitmap(loadedImg))
-            {
-                //SVG svg = RegionFill.FillRegionList(bmp, 21, 50);
-                //bmp.Save("SDFK.bmp");
-                //svg.endInit();
-                //File.WriteAllText("SDF.html","<html>" + svg.s() + "</html>");
-            }
-            long end = Environment.TickCount;
-            Console.WriteLine(end - start);
         }
+        #region Window Events
 
         private void Window_DragEnter(object sender, DragEventArgs e)
         {
@@ -41,210 +35,107 @@ namespace Patternizer
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                //string data = (String)e.Data.GetData(DataFormats.FileDrop);
-                //BitmapImage img = new BitmapImage(new Uri(data));
-                //img.
+                string[] data = (String[])e.Data.GetData(DataFormats.FileDrop);
+                if (data.Length > 0)
+                {
+                    LoadedImg = Bitmap.FromFile(data[0]);
+                    using (Bitmap tmpImg = new Bitmap(LoadedImg))
+                    {
+                        tmpImg.Save(tempImgFile);
+                    }
+
+                    reloadImgFromTemp();
+                }
             }
         }
+
+        
 
         private void Window_DragLeave(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.None;
         }
 
-
-        private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        #endregion
+        private void reloadImgFromTemp()
         {
-        }
-        Color[] colors = new Color[]
-        {
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-            Color.Red,
-        };
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            long start = Environment.TickCount;
-
-            File.Delete("SDFK.bmp");
-
-            using (Bitmap bmp = new Bitmap(loadedImg))
-            {
-                SVG svg = RegionFill.FillRegionList(bmp, (int)slider2.Value + 1, (int)slider2.Value + 1);
-                RegionFill.FillRegionList(bmp, 30, colors);
-                bmp.Save("SDFK.bmp");
-                svg.endInit();
-                File.WriteAllText("SDF.html", "<html>" + svg.s() + "</html>");
-            }
-            long end = Environment.TickCount;
-            Console.WriteLine(end - start);
-
-
-
             BitmapImage bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-            bitmap.UriSource = new Uri("SDFK.bmp", UriKind.Relative);
+            bitmap.UriSource = new Uri(tempImgFile, UriKind.Relative);
             bitmap.EndInit();
-            img.Source = bitmap;
+            UI_previewFromImage.Source = bitmap;
+        }
+
+        private void UI_Btn_UpdatePreview_Click(object sender, RoutedEventArgs e)
+        {
+            long start = Environment.TickCount;
+
+            using (Bitmap bmp = new Bitmap(LoadedImg))
+            {
+                RegionFill.FillRegionList(getShapeType(), bmp, 30, 30);
+                bmp.Save(tempImgFile);
+            }
+            reloadImgFromTemp();
+        }
+
+        private ShapeType getShapeType()
+        {
+            ShapeType type;
+
+            if (UI_ComboBox_ShapeSelection.SelectedItem == null)
+                return ShapeType.triangle;
+
+            ComboBoxItem item = (ComboBoxItem)UI_ComboBox_ShapeSelection.SelectedItem;
+            string str = (string)item.Content;
+            switch (str)
+            {
+                case "Triangle":
+                    type = ShapeType.triangle;
+                    break;
+                case "Square":
+                    type = ShapeType.square;
+                    break;
+                default:
+                    type = ShapeType.triangle;
+                    break;
+            }
+            return type;
+        }
+
+        private void UI_Btn_Output_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Path.GetFullPath(OutputFile));
+        }
+
+        private void UI_Btn_OutputFolder_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessStartInfo explorer = new ProcessStartInfo("explorer");
+            explorer.Arguments = Path.GetDirectoryName(Path.GetFullPath(OutputFile));
+            Process.Start(explorer);
+        }
+
+        private void UI_Btn_Compute_Click(object sender, RoutedEventArgs e)
+        {
+            using (Bitmap bmp = new Bitmap(LoadedImg))
+            {
+                if (UI_RadioBtn_Svg.IsChecked == true)
+                {
+                    OutputFile = Path.ChangeExtension(OutputFile, "svg");
+                    BasicSVG svg = RegionFill.FillRegionList(getShapeType(), bmp, (int)slider2.Value + 1, (int)slider2.Value + 1);
+                    svg.endInit();
+                    File.WriteAllText(OutputFile, "<html>" + svg + "</html>");
+                }
+                else if (UI_RadioBtn_Image.IsChecked == true)
+                {
+                    OutputFile = Path.ChangeExtension(OutputFile, "bmp");
+
+                    RegionFill.FillRegionList(getShapeType(), bmp, 30, 30);
+                    bmp.Save(tempImgFile);
+                    bmp.Save(OutputFile);
+                }
+            }
         }
     }
 }

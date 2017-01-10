@@ -8,7 +8,6 @@ namespace Patternizer
         public RightPointTriangle(Rectangle ImgRect, int StartX, int StartY, int Width, int Height) 
             : base(ImgRect, StartX, StartY, Width, Height)
         {
-            
         }
 
         protected override List<RowRangeData> getIndexArray(Rectangle ImgRect, int StartX, int StartY, int Width, int Height)

@@ -93,7 +93,7 @@
     <Compile Include="Range.cs" />
     <Compile Include="RegionFill.cs" />
     <Compile Include="Square.cs" />
-    <Compile Include="SVG.cs" />
+    <Compile Include="BasicSVG.cs" />
     <Compile Include="Triangle.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -135,9 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Bitmap1.bmp" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">

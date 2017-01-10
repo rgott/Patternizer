@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Patternizer
 {
-    public class SVG
+    public class BasicSVG
     {
         StringBuilder builder = new StringBuilder();
-        public SVG(Rectangle rect)
+        public BasicSVG(Rectangle rect)
         {
             // create header
             builder
@@ -25,7 +25,7 @@ namespace Patternizer
                 .AppendLine("\">");
         }
 
-        internal string s()
+        public override string ToString()
         {
             return builder.ToString();
         }

@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 
 namespace Patternizer
 {
+    public enum ShapeType
+    {
+        square,
+        triangle
+    }
     public abstract class RegionFill
     {
         public Rectangle ImgRect { get; set; }
@@ -27,7 +32,8 @@ namespace Patternizer
             this.Height = Height;
             this.ImgRect = ImgRect;
         }
-        public static void FillRegionList(Bitmap Img, int FillSize,params Color[] colors)
+        
+        public static void FillRegionList(ShapeType type,Bitmap Img, int FillSize,params Color[] colors)
         {
             Rectangle ImgRect = new Rectangle(0, 0, Img.Width, Img.Height); // generate for all objects
             int count = 0;
@@ -36,47 +42,67 @@ namespace Patternizer
             {
                 for (int currentY = (count % 2 == 0) ? 0 : -FillSize / 2; currentY < FillSize + Img.Height; currentY += FillSize)
                 {
-                    new LeftPointTriangle(ImgRect, currentX, currentY, FillSize, FillSize).setAverageColorUnsafe(Img,colors[colorCount++]);
-                    new RightPointTriangle(ImgRect, currentX, currentY + FillSize / 2, FillSize, FillSize).setAverageColorUnsafe(Img,colors[colorCount++]);
+                    switch (type)
+                    {
+                        case ShapeType.square:
+                            new Square(ImgRect, currentX, currentY, FillSize, FillSize).setAverageColorUnsafe(Img,colors[colorCount++]);
+                            break;
 
-                    //new Square(Img, currentX, currentY, FillWidth, FillHeight).FillRegion();
+                        case ShapeType.triangle:
+                            new LeftPointTriangle(ImgRect, currentX, currentY, FillSize, FillSize).setAverageColorUnsafe(Img,colors[colorCount++]);
+                            new RightPointTriangle(ImgRect, currentX, currentY + FillSize / 2, FillSize, FillSize).setAverageColorUnsafe(Img,colors[colorCount++]);
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 count++;
             }
         }
-        public static SVG FillRegionList(Bitmap Img, int FillWidth, int FillHeight)
+        public static BasicSVG FillRegionList(ShapeType type, Bitmap Img, int FillWidth, int FillHeight)
         {
             Rectangle ImgRect = new Rectangle(0, 0, Img.Width, Img.Height); // generate for all objects
-            SVG svg = new SVG(ImgRect);
+            BasicSVG svg = new BasicSVG(ImgRect);
             int count = 0;
             for (int currentX = 0; currentX < Img.Width; currentX += FillWidth)
             {
                 for (int currentY = (count % 2 == 0) ? 0 : -FillHeight / 2; currentY < FillHeight + Img.Height; currentY += FillHeight)
                 {
-                    svg.addPoint(new LeftPointTriangle(ImgRect, currentX, currentY, FillWidth, FillHeight).getandSetAverageColor(Img),new System.Windows.Point[]
+                    switch (type)
                     {
-                        new System.Windows.Point(currentX + FillWidth, currentY),
-                        new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
-                        new System.Windows.Point(currentX, currentY - (FillHeight / 2.0))
-                    });
+                        case ShapeType.square:
+                            svg.addPoint(new Square(ImgRect, currentX, currentY, FillWidth, FillHeight).setAndgetAverageColorUnsafe(Img), new System.Windows.Point[]
+                                {
+                                    new System.Windows.Point(currentX, currentY),
+                                    new System.Windows.Point(currentX, currentY + FillHeight),
+                                    new System.Windows.Point(currentX + FillWidth, currentY),
+                                    new System.Windows.Point(currentX + FillWidth, currentY + FillHeight)
+                                });
+                            break;
 
-                    svg.addPoint(new RightPointTriangle(ImgRect, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).getandSetAverageColor(Img) ,new System.Windows.Point[]
-                    {
-                        new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
-                        new System.Windows.Point(currentX + FillWidth, currentY + FillHeight),
-                        new System.Windows.Point(currentX + FillWidth, currentY)
-                    });
+                        case ShapeType.triangle:
+                            svg.addPoint(new LeftPointTriangle(ImgRect, currentX, currentY, FillWidth, FillHeight).getandSetAverageColor(Img),new System.Windows.Point[]
+                                {
+                                    new System.Windows.Point(currentX + FillWidth, currentY),
+                                    new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
+                                    new System.Windows.Point(currentX, currentY - (FillHeight / 2.0))
+                                });
 
+                            svg.addPoint(new RightPointTriangle(ImgRect, currentX, currentY + FillHeight / 2, FillWidth, FillHeight).getandSetAverageColor(Img) ,new System.Windows.Point[]
+                                {
+                                    new System.Windows.Point(currentX, currentY + (FillHeight / 2.0)),
+                                    new System.Windows.Point(currentX + FillWidth, currentY + FillHeight),
+                                    new System.Windows.Point(currentX + FillWidth, currentY)
+                                });
+                            break;
+                    }
                     
-                    //new Square(Img, currentX, currentY, FillWidth, FillHeight).FillRegion();
                 }
                 count++;
             }
             return svg;
         }
 
-        //public abstract Color FillRegion(Bitmap Img);
-        
         /// <returns>Should not return any negative numbers</returns>
         protected abstract List<RowRangeData> getIndexArray(Rectangle ImgRect,int StartX, int StartY, int Width, int Height);
 
@@ -123,6 +149,7 @@ namespace Patternizer
                 return Color.FromArgb((int)(R / count),(int)(G / count), (int)(B / count));
             }
         }
+
         private Color setAndgetAverageColorUnsafe(Bitmap processedBitmap)
         {
             unsafe
@@ -193,10 +220,6 @@ namespace Patternizer
                 int widthInBytes;
                 byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
 
-                long R = 0;
-                long G = 0;
-                long B = 0;
-
                 // set the color for the region
                 for (int i = 0; i < Fill.Count; i++)
                 {
@@ -212,17 +235,5 @@ namespace Patternizer
                 processedBitmap.UnlockBits(bitmapData);
             }
         }
-        //protected Color getAverageColor(Bitmap Image)
-        //{ 
-        //    ColorAvg cavg = new ColorAvg(); 
-        //    foreach (RowRangeData range in Fill)
-        //    {
-        //        for (int i = range.From; i < range.To; i++)
-        //        {
-        //            cavg.Add(Image.GetPixel(i, range.row));
-        //        }
-        //    }
-        //    return cavg.getAverage();
-        //}
     }
 }
