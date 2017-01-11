@@ -92,6 +92,9 @@
     <Compile Include="Fraction.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RegionFill.cs" />
+    <Compile Include="CustomSlider.xaml.cs">
+      <DependentUpon>CustomSlider.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Square.cs" />
     <Compile Include="BasicSVG.cs" />
     <Compile Include="Triangle.cs" />
@@ -107,6 +110,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="CustomSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -9,6 +9,9 @@
         DragEnter="Window_DragEnter"
         Drop="Window_Drop"
         DragLeave="Window_DragLeave"
+        Closing="Window_Closing"
+        MinWidth="350px"
+        MinHeight="430px"
         Title="Image Patternizer" Height="502.525" Width="944.978">
     <TabControl>
         <!--<TabItem Header="Manual">
@@ -21,8 +24,11 @@
                     <ColumnDefinition Width="250"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <TextBlock Name="textBlock" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Drag an image here."/>
-                    <Image Name="UI_previewFromImage"/>
+                    <StackPanel x:Name="UI_StackPanel_dragText" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock HorizontalAlignment="Center" Text="Drag an image here."/>
+                        <TextBlock HorizontalAlignment="Center" Name="UI_textBlock_DragEvent_ErrorMessage"/>
+                    </StackPanel>
+                    <Image Name="UI_Image_previewFromImage"/>
                 </Grid>
                 <Grid Background="White" HorizontalAlignment="Right" MinWidth="150px" Grid.Column="2">
                     <Grid.RowDefinitions>
@@ -31,19 +37,19 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid Margin="0,0,0,0" Grid.Row="0">
-                        <!--TODO: make into module-->
-                        <Slider x:Name="slider2" HorizontalAlignment="Left" Minimum="1" Maximum="50" Margin="10,10,0,0" VerticalAlignment="Top" Width="148"/>
-                        <Slider x:Name="slider" HorizontalAlignment="Left" Minimum="1" Maximum="50" Margin="10,50,0,0" VerticalAlignment="Top" Width="125"/>
+                        <local:CustomSlider x:Name="UI_CustomSlider_X" SliderText="X" MaximumValue="50" Value="25" Margin="10" VerticalAlignment="Top"></local:CustomSlider>
+                        <local:CustomSlider x:Name="UI_CustomSlider_Y" SliderText="Y" MaximumValue="50" Value="25" Margin="10,33,10,10" VerticalAlignment="Top"></local:CustomSlider>
                         <Grid VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,35" >
                             <ComboBox x:Name="UI_ComboBox_ShapeSelection">
                                 <ComboBoxItem IsSelected="True">Triangle</ComboBoxItem>
                                 <ComboBoxItem>Square</ComboBoxItem>
                             </ComboBox>
                         </Grid>
-                        <Button x:Name="button" Content="Update Preview" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="105" Click="UI_Btn_UpdatePreview_Click" Margin="10"/>
-                        <CheckBox x:Name="UI_CheckBox_AutoUpdate" Content="Auto Update" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10"/>
+                        <Button x:Name="UI_Btn_UpdatePreview" Content="Update Preview" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="105" Click="UI_Btn_UpdatePreview_Click" IsEnabled="False" Margin="10"/>
+                        <CheckBox x:Name="UI_CheckBox_AutoUpdate" IsEnabled="False" Unchecked="UI_CheckBox_AutoUpdate_Unchecked" Checked="UI_CheckBox_AutoUpdate_Checked" Content="Auto Update" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10"/>
+                        <CheckBox x:Name="UI_CheckBox_SyncronizeSlider" IsChecked="True" Unchecked="UI_CheckBox_SyncronizeSlider_Unchecked" Checked="UI_CheckBox_SyncronizeSlider_Checked" Content="Syncronize Sliders" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,32"/>
                     </Grid>
-                    <Grid VerticalAlignment="Bottom" Margin="0,0,0,48" Grid.Row="1">
+                    <Grid x:Name="UI_Grid_OutputTypes" IsEnabled="False" VerticalAlignment="Bottom" Margin="0,0,0,48" Grid.Row="1">
                         <GroupBox Header="Output Type" Height="54" VerticalAlignment="Top">
                             <WrapPanel>
                                 <!--TODO: pad all radio buttons-->
@@ -51,28 +57,31 @@
                                 <RadioButton x:Name="UI_RadioBtn_Svg" Content="Svg"/>
                             </WrapPanel>
                         </GroupBox>
-                        <Grid Margin="0,66,0,0" Height="59" VerticalAlignment="Top">
+                        <Grid x:Name="UI_Grid_Path" IsEnabled="False" Margin="0,66,0,0" Height="59" VerticalAlignment="Top">
                             <Grid VerticalAlignment="Top">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label x:Name="label" Content="Path:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                <TextBox x:Name="UI_txtBox_Path" Height="23" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Grid.Column="1"/>
+                                <TextBox x:Name="UI_txtBox_Path" Height="23" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Grid.Column="1"/>
                             </Grid>
 
-                            <Grid VerticalAlignment="Top" Margin="0,33,0,0">
+                            <Grid x:Name="UI_Grid_FileName" VerticalAlignment="Top" Margin="0,33,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label Content="File Name:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                <TextBox x:Name="UI_txtBox_FileName" Height="23" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Grid.Column="1"/>
+                                <TextBox x:Name="UI_txtBox_FileName" Height="23" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Grid.Column="1"/>
                             </Grid>
                         </Grid>
-                        <Button x:Name="UI_Btn_Compute" Content="Compute" VerticalAlignment="Top" Width="75" Click="UI_Btn_Compute_Click" Margin="165,135,10,0"/>
+                        
+                        <!--TODO: bind on UI_txtBox_FileName-->
+                        <Button x:Name="UI_Btn_Compute" IsEnabled="{Binding ElementName=UI_txtBox_Path,Path=Text.Length}" Content="Compute" VerticalAlignment="Top" Width="75" Click="UI_Btn_Compute_Click" Margin="165,135,10,0"/>
+
                     </Grid>
-                    <Grid VerticalAlignment="Bottom" Margin="10,0,10,10" Grid.Row="2" >
+                    <Grid x:Name="UI_Grid_OutputButtons" IsEnabled="False" VerticalAlignment="Bottom" Margin="10,0,10,10" Grid.Row="2" >
                         <Button x:Name="UI_Btn_Output" Content="Open With Default" HorizontalAlignment="Left" VerticalAlignment="Top" Width="113" Click="UI_Btn_Output_Click" Margin="117,0,0,0"/>
                         <Button x:Name="UI_Btn_OutputFolder" Content="Output Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="102" Click="UI_Btn_OutputFolder_Click" Margin="0,0,0,0"/>
                     </Grid>
