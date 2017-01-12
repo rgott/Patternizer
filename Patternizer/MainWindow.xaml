@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Patternizer"
         mc:Ignorable="d"
         AllowDrop="True"
+        Icon="PatternizerIcon.png"
         DragEnter="Window_DragEnter"
         Drop="Window_Drop"
         DragLeave="Window_DragLeave"
