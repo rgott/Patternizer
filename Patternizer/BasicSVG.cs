@@ -14,7 +14,7 @@ namespace Patternizer
         {
             // create header
             builder
-                .Append("<svg viewBox = \"")
+                .Append("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://web.resource.org/cc/\" viewBox = \"")
                 .Append(rect.Left)
                 .Append(" ")
                 .Append(rect.Top)
