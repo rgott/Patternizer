@@ -143,7 +143,7 @@ namespace Patternizer
 
                     BasicSVG svg = RegionFill.FillRegionList(getShapeType(), bmp, (int)UI_CustomSlider_X.Value + 1, (int)UI_CustomSlider_Y.Value + 1);
                     svg.endInit();
-                    File.WriteAllText(OutputFile, "<html>" + svg + "</html>");
+                    File.WriteAllText(OutputFile, svg.ToString());
                 }
                 else if (UI_RadioBtn_Image.IsChecked == true)
                 {
