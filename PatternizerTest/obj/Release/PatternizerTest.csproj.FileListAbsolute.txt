@@ -1,9 +1,0 @@
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\bin\Release\PatternizerTest.dll
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\bin\Release\PatternizerTest.pdb
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\bin\Release\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\bin\Release\Patternizer.exe
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\bin\Release\Patternizer.pdb
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\bin\Release\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\obj\Release\PatternizerTest.csprojResolveAssemblyReference.cache
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\obj\Release\PatternizerTest.dll
-C:\Users\Rob\Source\Visual Studio\Projects\Patternizer\PatternizerTest\obj\Release\PatternizerTest.pdb
